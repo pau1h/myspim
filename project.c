@@ -9,9 +9,8 @@ void ALU(unsigned A,unsigned B,char ALUControl,unsigned *ALUresult,char *Zero) /
 
 /* instruction fetch */
 /* 10 Points */
-int instruction_fetch(unsigned PC,unsigned *Mem,unsigned *instruction)
+int instruction_fetch(unsigned PC,unsigned *Mem,unsigned *instruction) //store the instruction in instruction ptr. returns 1 if halt sequence is required.
 {
-
 }
 
 
@@ -23,10 +22,14 @@ void instruction_partition(unsigned instruction, unsigned *op, unsigned *r1,unsi
 }
 
 
+/*
+21080001 -> 0010 0001 0000 1000 0000 0000 0000 0001 -> 001000 01000 01000 0000000000000001
+                                                        op      rs  rt      offset (immediate val)
 
+*/
 /* instruction decode */
 /* 15 Points */
-int instruction_decode(unsigned op,struct_controls *controls)
+int instruction_decode(unsigned op,struct_controls *controls) //after getting opcode of instruction
 {
 
 }
