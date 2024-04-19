@@ -11,6 +11,11 @@ void ALU(unsigned A,unsigned B,char ALUControl,unsigned *ALUresult,char *Zero) /
 /* 10 Points */
 int instruction_fetch(unsigned PC,unsigned *Mem,unsigned *instruction) //store the instruction in instruction ptr. returns 1 if halt sequence is required.
 {
+    if((PC % 4 != 0) || PC < 0x0000 || PC > 0xFFFF){ //halt sequence is reached if PC is out of range of memory, or PC is not word aligned.
+        return 1;
+    }
+    *instruction = MEM(PC); //MEM is defined in spimcore.c as Mem[PC >> 2]
+    return 0;
 }
 
 
