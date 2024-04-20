@@ -21,9 +21,15 @@ int instruction_fetch(unsigned PC,unsigned *Mem,unsigned *instruction) //store t
 
 /* instruction partition */
 /* 10 Points */
-void instruction_partition(unsigned instruction, unsigned *op, unsigned *r1,unsigned *r2, unsigned *r3, unsigned *funct, unsigned *offset, unsigned *jsec)
+void instruction_partition(unsigned instruction, unsigned *op, unsigned *r1,unsigned *r2, unsigned *r3, unsigned *funct, unsigned *offset, unsigned *jsec) //partition instruction into r1, r2, r3, funct, offset, and jsec
 {
-
+    *op = instruction >> 26;
+    *r1 = ((instruction >> 21) & 0x1F);
+    *r2 = ((instruction >> 16) & 0x1F);
+    *r3 = ((instruction >> 11) & 0x1F); 
+    *funct = instruction & 0x1F;
+    *offset = instruction & 0x7FFF;
+    *jsec = instruction & 0x1FFFFFF;
 }
 
 
@@ -34,7 +40,7 @@ void instruction_partition(unsigned instruction, unsigned *op, unsigned *r1,unsi
 */
 /* instruction decode */
 /* 15 Points */
-int instruction_decode(unsigned op,struct_controls *controls) //after getting opcode of instruction
+int instruction_decode(unsigned op,struct_controls *controls)
 {
 
 }
