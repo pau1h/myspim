@@ -9,7 +9,7 @@ void bin(unsigned hex){ //takes a hex number and prints out binary value
 }
 /* ALU */
 /* 10 Points */
-void ALU(unsigned A,unsigned B,char ALUControl,unsigned *ALUresult,char *Zero) //A and B are input parameters. Implement operations on A and B according to ALUControl.
+void ALU(unsigned A,unsigned B,char ALUControl,unsigned *ALUresult,char *Zero) //assign 1 to zero if output is 0, else set to 0.
 {
 }
 
@@ -170,8 +170,26 @@ void sign_extend(unsigned offset,unsigned *extended_value) //assign the sign-ext
 /* ALU operations */
 /* 10 Points */
 int ALU_operations(unsigned data1,unsigned data2,unsigned extended_value,unsigned funct,char ALUOp,char ALUSrc,unsigned *ALUresult,char *Zero)
-{
-
+{ 
+    unsigned B = (ALUSrc == 1) ? extended_value : data2; //if alusrc is 1, pull data from extended_val instead of reg 2
+    if(ALUOp == 7){ 
+        switch(funct){
+           case 0x20: ALUOp = 0; //add
+           break;
+           case 0x22: ALUOp = 2; //sub
+           break;
+           case 0x24: ALUOp = 4; //and
+           break;
+           case 0x25: ALUOp = 100; //or
+           break;
+           case 0x2A: ALUOp = 2; //slt
+           break;
+           case 0x2B: ALUOp = 3; //sltu
+           default: return 1;
+        }
+    }
+    ALU(data1, B, ALUOp, ALUresult, Zero);
+    return 0;
 }
 
 /* Read / Write Memory */
