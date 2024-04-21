@@ -1,6 +1,12 @@
 #include "spimcore.h"
 
 
+void bin(unsigned hex){ //takes a hex number and prints out binary value
+    for(int i = 31; i >= 0; i--){
+        printf("%u", (hex>>i & 1));
+    }
+    printf("\n");
+}
 /* ALU */
 /* 10 Points */
 void ALU(unsigned A,unsigned B,char ALUControl,unsigned *ALUresult,char *Zero) //A and B are input parameters. Implement operations on A and B according to ALUControl.
@@ -42,7 +48,93 @@ void instruction_partition(unsigned instruction, unsigned *op, unsigned *r1,unsi
 /* 15 Points */
 int instruction_decode(unsigned op,struct_controls *controls)
 {
-
+    //for memread, write, or regwrite 0 = disabled, 1 = enabled, 2 = dont care
+    //for regdst, jump, branch, memtoreg, or alusrc, the value of 0 or 1 indicates the selected path of the multiplexer; 2 = dont care
+    //TODO: change to switch statement. add rest of instructions
+    if(op == 0){ //R type instruction
+        controls->RegDst = 1;
+        controls->Jump = 0;
+        controls->Branch = 0;
+        controls-> MemRead = 0;
+        controls->MemtoReg = 0;
+        controls->ALUOp = 7;
+        controls->MemWrite = 0;
+        controls->ALUSrc = 0;
+        controls->RegWrite = 1;
+    }else if(op == 0x23){ //load word from memory to register
+        controls->RegDst = 0;
+        controls->Jump = 0;
+        controls->Branch = 0;
+        controls->MemRead = 1;
+        controls->MemtoReg = 1;
+        controls->ALUOp = 0;
+        controls->MemWrite = 0;
+        controls->ALUSrc = 1;
+        controls->RegWrite = 1;
+    }else if(op == 0x2B){ //store word from register to mem
+        controls->RegDst = 2;
+        controls->Jump = 0;
+        controls->Branch = 0;
+        controls->MemRead = 0;
+        controls->MemtoReg = 2;
+        controls->ALUOp = 0;
+        controls->MemWrite = 1;
+        controls->ALUSrc = 1;
+        controls->RegWrite = 0;
+    }else if(op == 0x4){ //beq
+        controls->RegDst = 2;
+        controls->Jump = 0;
+        controls->Branch = 1;
+        controls->MemRead = 0;
+        controls->MemtoReg = 2;
+        controls->ALUOp = 1; //aluop set to subtract. if r1 - r2 == 0, registers are equal -> branch
+        controls->MemWrite = 0;
+        controls->ALUSrc = 0;
+        controls->RegWrite = 0;
+    }else if(op == 0xA){ //set less than immediate
+        controls->RegDst = 0;
+        controls->Jump = 0;
+        controls->Branch = 0;
+        controls->MemRead = 0;
+        controls->MemtoReg = 0;
+        controls->ALUOp = 2;
+        controls->MemWrite = 0;
+        controls->ALUSrc = 1;
+        controls->RegWrite = 1;
+    }else if(op == 0xB){ //set less than immediate unsigned 
+        controls->RegDst = 0;
+        controls->Jump = 0;
+        controls->Branch = 0;
+        controls->MemRead = 0;
+        controls->MemtoReg = 0;
+        controls->ALUOp = 3;
+        controls->MemWrite = 0;
+        controls->ALUSrc = 1;
+        controls->RegWrite = 1;
+    }else if(op == 0x8){ //add immediate 
+        controls->RegDst = 0;
+        controls->Jump = 0;
+        controls->Branch = 0;
+        controls->MemRead = 0;
+        controls->MemtoReg = 0;
+        controls->ALUOp = 0;
+        controls->MemWrite = 0;
+        controls->ALUSrc = 1;
+        controls->RegWrite = 1;
+    }else if(op == 0xF){ //load upper immediate. loads constant in upper 16 bits, fills lower 16 bits with 0s
+        controls->RegDst = 0;
+        controls->Jump = 0;
+        controls->Branch = 0;
+        controls->MemRead = 0;
+        controls->MemtoReg = 0;
+        controls->ALUOp = 6; //shift left extended_value by 16 bits
+        controls->MemWrite = 0;
+        controls->ALUSrc = 1;
+        controls->RegWrite = 1;
+    }else{
+        return 1;
+    }
+    return 0;
 }
 
 /* Read Register */
