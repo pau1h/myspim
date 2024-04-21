@@ -158,9 +158,13 @@ void read_register(unsigned r1,unsigned r2,unsigned *Reg,unsigned *data1,unsigne
 
 /* Sign Extend */
 /* 10 Points */
-void sign_extend(unsigned offset,unsigned *extended_value)
+void sign_extend(unsigned offset,unsigned *extended_value) //assign the sign-extended value of offset to extended_value. 16th bit is the sign bit.
 {
-
+    if((offset >> 16) & 0x1){ 
+        *extended_value = (offset|0xFFFF0000);
+    }else{
+        *extended_value = offset;
+    }
 }
 
 /* ALU operations */
