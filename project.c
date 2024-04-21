@@ -50,7 +50,7 @@ int instruction_decode(unsigned op,struct_controls *controls)
 {
     //for memread, write, or regwrite 0 = disabled, 1 = enabled, 2 = dont care
     //for regdst, jump, branch, memtoreg, or alusrc, the value of 0 or 1 indicates the selected path of the multiplexer; 2 = dont care
-    //TODO: change to switch statement. add rest of instructions
+    //TODO: change to switch statement
     if(op == 0){ //R type instruction
         controls->RegDst = 1;
         controls->Jump = 0;
@@ -131,8 +131,16 @@ int instruction_decode(unsigned op,struct_controls *controls)
         controls->MemWrite = 0;
         controls->ALUSrc = 1;
         controls->RegWrite = 1;
-    }else{
-        return 1;
+    }else if(op == 0x2){ //jump
+        controls->RegDst = 2;
+        controls->Jump = 1;
+        controls->Branch = 2; //DC since jump mux is set to 1
+        controls->MemRead = 0;
+        controls->MemtoReg = 2;
+        controls->ALUOp = 0;
+        controls->MemWrite = 0;
+        controls->ALUSrc = 2;
+        controls->RegWrite = 0;
     }
     return 0;
 }
