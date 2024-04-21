@@ -141,15 +141,18 @@ int instruction_decode(unsigned op,struct_controls *controls)
         controls->MemWrite = 0;
         controls->ALUSrc = 2;
         controls->RegWrite = 0;
+    }else{
+        return 1;
     }
     return 0;
 }
 
 /* Read Register */
 /* 5 Points */
-void read_register(unsigned r1,unsigned r2,unsigned *Reg,unsigned *data1,unsigned *data2)
+void read_register(unsigned r1,unsigned r2,unsigned *Reg,unsigned *data1,unsigned *data2) //read registers addressed by r1 and r2 from Reg. write values to data1 and data2.
 {
-
+    *data1 = Reg[r1];
+    *data2 = Reg[r2];
 }
 
 
