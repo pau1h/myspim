@@ -11,13 +11,32 @@ void bin(unsigned hex){ //takes a hex number and prints out binary value
 /* 10 Points */
 void ALU(unsigned A,unsigned B,char ALUControl,unsigned *ALUresult,char *Zero) //assign 1 to zero if output is 0, else set to 0.
 {
+    switch(ALUControl){
+        case 0: *ALUresult = A + B; //add or DC
+        break;
+        case 1: *ALUresult = A - B; //sub
+        break;
+        case 2: *ALUresult = ((int)A < (int)B); //slt(signed)
+        break;
+        case 3: *ALUresult = (A < B); //slt (unsigned)
+        break;
+        case 4: *ALUresult = (A&B); //logical AND
+        break;
+        case 5: *ALUresult = (A|B); //logical OR
+        break;
+        case 6: *ALUresult = (B<<16); //shift B by 16 bits
+        break;
+        case 7: *ALUresult = (~A); //NOT
+        break;
+    }
+    *Zero = (ALUresult == 0 ? 1 : 0); //if aluresult is zero, set Zero = 1
 }
 
 /* instruction fetch */
 /* 10 Points */
 int instruction_fetch(unsigned PC,unsigned *Mem,unsigned *instruction) //store the instruction in instruction ptr. returns 1 if halt sequence is required.
 {
-    if((PC % 4 != 0) || PC < 0x0000 || PC > 0xFFFF){ //halt sequence is reached if PC is out of range of memory, or PC is not word aligned.
+    if((PC % 4 != 0) || PC < 0 || PC > 0xFFFF){ //halt sequence is reached if PC is out of range of memory, or PC is not word aligned.
         return 1;
     }
     *instruction = MEM(PC); //MEM is defined in spimcore.c as Mem[PC >> 2]
@@ -216,17 +235,23 @@ int rw_memory(unsigned ALUresult,unsigned data2,char MemWrite,char MemRead,unsig
 
 /* Write Register */
 /* 10 Points */
-void write_register(unsigned r2,unsigned r3,unsigned memdata,unsigned ALUresult,char RegWrite,char RegDst,char MemtoReg,unsigned *Reg)
+void write_register(unsigned r2,unsigned r3,unsigned memdata,unsigned ALUresult,char RegWrite,char RegDst,char MemtoReg,unsigned *Reg) //set r2 or r3 based on regdst to aluresult or memdata.
 {
     if(RegWrite == 1){
-        Reg[RegDst == 0 ? r2 : r3] = (MemtoReg == 1 ? memdata : ALUresult); //set r2 or r3 based on regdst to aluresult or memdata.
+        Reg[RegDst == 0 ? r2 : r3] = (MemtoReg == 1 ? memdata : ALUresult); 
     }
 }
 
 /* PC update */
 /* 10 Points */
-void PC_update(unsigned jsec,unsigned extended_value,char Branch,char Jump,char Zero,unsigned *PC)
+void PC_update(unsigned jsec,unsigned extended_value,char Branch,char Jump,char Zero,unsigned *PC) //update the program counter
 {
-
+     *PC += 4; //update program counter
+     if(Branch && Zero){ //beq 
+        *PC += (extended_value<<2);
+     }
+     if(Jump){
+        *PC =  (*PC & 0xF0000000) | (jsec<<2); //psudodirect addressing. keep four most sig bits and add jsec to find jump address
+     }
 }
 
