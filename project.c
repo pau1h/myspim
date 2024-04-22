@@ -194,9 +194,23 @@ int ALU_operations(unsigned data1,unsigned data2,unsigned extended_value,unsigne
 
 /* Read / Write Memory */
 /* 10 Points */
-int rw_memory(unsigned ALUresult,unsigned data2,char MemWrite,char MemRead,unsigned *memdata,unsigned *Mem)
+int rw_memory(unsigned ALUresult,unsigned data2,char MemWrite,char MemRead,unsigned *memdata,unsigned *Mem) //use the value of memwrite or read to determine of a mem write / read operation is occuring
 {
-
+    if(MemRead != 0){ //load word from mem to register
+        if((ALUresult % 4 == 0) && ALUresult <= 0xFFFF){  //check if aluresult is word aligned and within mem range
+            *memdata = Mem[ALUresult];
+        }else{
+            return 1;
+        }
+    }
+    if(MemWrite != 0){  //write word to memory
+        if((ALUresult % 4 == 0) && ALUresult <= 0xFFFF){
+            Mem[ALUresult] = data2;
+        }else{
+            return 1;
+        }
+    }
+    return 0;
 }
 
 
