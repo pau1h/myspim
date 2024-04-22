@@ -247,11 +247,11 @@ void write_register(unsigned r2,unsigned r3,unsigned memdata,unsigned ALUresult,
 void PC_update(unsigned jsec,unsigned extended_value,char Branch,char Jump,char Zero,unsigned *PC) //update the program counter
 {
      *PC += 4; //update program counter
-     if(Branch && Zero){ //beq 
+     if(Branch == 1 && Zero == 1){ //beq 
         *PC += (extended_value<<2);
      }
      if(Jump){
-        *PC =  (*PC & 0xF0000000) | (jsec<<2); //psudodirect addressing. keep four most sig bits and add jsec to find jump address
+        *PC =  ((*PC & 0xF0000000) | (jsec<<2)); //psudodirect addressing. keep four most sig bits and add jsec to find jump address
      }
 }
 
