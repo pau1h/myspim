@@ -5,7 +5,6 @@
 /* 10 Points */
 void ALU(unsigned A,unsigned B,char ALUControl,unsigned *ALUresult,char *Zero) //assign 1 to zero if output is 0, else set to 0.
 {
-    printf("ALUControl: %d\n", ALUControl);
     switch(ALUControl){
         case 0: *ALUresult = A + B; //add or DC
         break;
