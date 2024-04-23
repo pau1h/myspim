@@ -1,12 +1,6 @@
 #include "spimcore.h"
 
 
-void bin(unsigned hex){ //takes a hex number and prints out binary value
-    for(int i = 31; i >= 0; i--){
-        printf("%u", (hex>>i & 1));
-    }
-    printf("\n");
-}
 /* ALU */
 /* 10 Points */
 void ALU(unsigned A,unsigned B,char ALUControl,unsigned *ALUresult,char *Zero) //assign 1 to zero if output is 0, else set to 0.
@@ -29,7 +23,7 @@ void ALU(unsigned A,unsigned B,char ALUControl,unsigned *ALUresult,char *Zero) /
         case 7: *ALUresult = (~A); //NOT
         break;
     }
-    *Zero = (ALUresult == 0 ? 1 : 0); //if aluresult is zero, set Zero = 1
+    *Zero = (*ALUresult == 0 ? 1 : 0); //if aluresult is zero, set Zero = 1
 }
 
 /* instruction fetch */
@@ -52,8 +46,8 @@ void instruction_partition(unsigned instruction, unsigned *op, unsigned *r1,unsi
     *r1 = ((instruction >> 21) & 0x1F);
     *r2 = ((instruction >> 16) & 0x1F);
     *r3 = ((instruction >> 11) & 0x1F); 
-    *funct = instruction & 0x1F;
-    *offset = instruction & 0x7FFF;
+    *funct = instruction & 0x3F;
+    *offset = instruction & 0xFFFF;
     *jsec = instruction & 0x1FFFFFF;
 }
 
@@ -179,7 +173,7 @@ void read_register(unsigned r1,unsigned r2,unsigned *Reg,unsigned *data1,unsigne
 /* 10 Points */
 void sign_extend(unsigned offset,unsigned *extended_value) //assign the sign-extended value of offset to extended_value. 16th bit is the sign bit.
 {
-    if((offset >> 16) & 0x1){ 
+    if((offset >> 15) & 0x1){ 
         *extended_value = (offset|0xFFFF0000);
     }else{
         *extended_value = offset;
@@ -204,6 +198,7 @@ int ALU_operations(unsigned data1,unsigned data2,unsigned extended_value,unsigne
            case 0x2A: ALUOp = 2; //slt
            break;
            case 0x2B: ALUOp = 3; //sltu
+           break;
            default: return 1;
         }
     }
@@ -217,14 +212,14 @@ int rw_memory(unsigned ALUresult,unsigned data2,char MemWrite,char MemRead,unsig
 {
     if(MemRead != 0){ //load word from mem to register
         if((ALUresult % 4 == 0) && ALUresult <= 0xFFFF){  //check if aluresult is word aligned and within mem range
-            *memdata = Mem[ALUresult];
+            *memdata = Mem[ALUresult>>2];
         }else{
             return 1;
         }
     }
     if(MemWrite != 0){  //write word to memory
         if((ALUresult % 4 == 0) && ALUresult <= 0xFFFF){
-            Mem[ALUresult] = data2;
+            Mem[ALUresult>>2] = data2;
         }else{
             return 1;
         }
@@ -247,8 +242,8 @@ void write_register(unsigned r2,unsigned r3,unsigned memdata,unsigned ALUresult,
 void PC_update(unsigned jsec,unsigned extended_value,char Branch,char Jump,char Zero,unsigned *PC) //update the program counter
 {
      *PC += 4; //update program counter
-     if(Branch == 1 && Zero == 1){ //beq 
-        *PC += (extended_value<<2);
+     if(Branch == 1 && Zero == 1){ //beq not working, branching to 4030 instead of 4024, its just adding 4 to the PC. BEQ is not being triggered!
+        *PC = *PC + (extended_value<<2);
      }
      if(Jump){
         *PC =  ((*PC & 0xF0000000) | (jsec<<2)); //psudodirect addressing. keep four most sig bits and add jsec to find jump address
