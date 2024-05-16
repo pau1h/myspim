@@ -36,5 +36,5 @@ Example program can be found in the examples/ folder
 ## Acknowledgements
 This project was made for my CDA3103 class at the University of Central Florida. Credit to my professor, John Aedo, for providing spimcore.h and spimcore.c, and for giving me all the knowledge I learned in that class!
 
-##Contributing
+## Contributing
 This is just a fun project that I worked on, but if anyone wants to contribute I accept pull requests!
