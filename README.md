@@ -21,6 +21,7 @@ cd MySPIM
 
 # Build the project
 make
+```
 
 ## Usage
 
@@ -28,6 +29,7 @@ After building the project, you can run the simualtor with the following command
 
 ```bash
 ./myspim <assembly_file.asm>
+```
 
 Example program can be found in the examples/ folder
 
