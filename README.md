@@ -14,7 +14,7 @@ To install MySPIM, clone the repository and build the project using the provided
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/MySPIM.git
+git clone https://github.com/pau1h/MySPIM.git
 
 # Navigate to the project directory
 cd MySPIM
