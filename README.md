@@ -10,7 +10,7 @@
 
 ## Installation
 
-To install MySPIM, clone the repository and build the project using the following commands. Ensure you have `gcc` installed on your system.
+To install MySPIM, clone the repo and build the project using the following commands. Ensure you have `gcc` installed on your system.
 
 ```bash
 # Clone the repository
