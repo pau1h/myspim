@@ -10,7 +10,7 @@
 
 ## Installation
 
-To install MySPIM, clone the repository and build the project using the provided Makefile. Ensure you have `gcc` and `make` installed on your system.
+To install MySPIM, clone the repository and build the project using the provided Makefile. Ensure you have `gcc` installed on your system.
 
 ```bash
 # Clone the repository
@@ -20,12 +20,12 @@ git clone https://github.com/pau1h/MySPIM.git
 cd MySPIM
 
 # Build the project
-make
+gcc -o myspim spimcore.c project.c
 ```
 
 ## Usage
 
-After building the project, you can run the simualtor with the following command:
+After building the project, you can run the simulator with the following command:
 
 ```bash
 ./myspim <assembly_file.asm>
@@ -34,7 +34,7 @@ After building the project, you can run the simualtor with the following command
 Example program can be found in the examples/ folder
 
 ## Acknowledgements
-This project was made for my CDA3103 class at the University of Central Florida. Credit to my professor, John Aedo, for providing spimcore.h and spimcore.c, and for giving me all the knowledge I learned in that class!
+This project was made for my CDA3103 class at the University of Central Florida. Credit to my professor, John Aedo, for providing spimcore.h, spimcore.c, and for giving me all the knowledge I learned in that class!
 
 ## Contributing
-This is just a fun project that I worked on, but if anyone wants to contribute I accept pull requests!
+This is just a fun project that I worked on, but if anyone wants to contribute feel free to submit a pull request.
